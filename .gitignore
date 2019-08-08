@@ -3,3 +3,14 @@
 ################################################################################
 
 /Hackaton/.vs/Hackaton/v16/Server/sqlite3
+/Hackaton/Hackaton/bin/Debug
+/Hackaton/Hackaton/obj/Debug
+/Hackaton/Hackaton.Business/obj/Debug
+/Hackaton/Hackaton.Domain/bin/Debug
+/Hackaton/Hackaton.Domain/obj/Debug
+/Hackaton/Hackaton.Persistance/obj/Debug
+/Hackaton/Hackaton.Tests/obj/Debug
+/Hackaton/packages
+/Hackaton/.vs/Hackaton/v16
+/Hackaton/Hackaton.Business/bin/Debug
+/Hackaton/Hackaton.Persistance/bin/Debug
