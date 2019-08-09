@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Hackaton.Business
@@ -19,19 +18,22 @@ namespace Hackaton.Business
             Parallel.ForEach(attendes, (attende) => {
                 attende.Dates.RemoveAll(t => !(t.CompareTo(_startDate) >= 0 && t.CompareTo(_endDate) <= 0));
             });
+
+            //Object to be retrieved
             var result = new HashSet<CityResult>();
             var grouped = attendes.GroupBy(t => t.City);
 
-
-            Action<IGrouping<string, Attende>> _groupedFunction = (city) =>
+            //I have grouped cities. Every loop contains the info of that city summarized
+            Parallel.ForEach(grouped, (city) =>
             {
                 var cityResult = new HashSet<CityResult>();
 
+                //Select all the possible dates for that city
                 var dates = city.SelectMany(t => t.Dates).Distinct().ToHashSet();
                 foreach (var date in dates)
                 {
                     //I need to assess every possible day.
-                    var temp = new CityResult()
+                    var record = new CityResult()
                     {
                         City = city.Key,
                         StartDate = date,
@@ -40,20 +42,23 @@ namespace Hackaton.Business
                     };
 
                     // the possible attendants for every consecutive day
-                    temp.Attendants.AddRange(
-                        city.Where(t => t.Dates.Contains(temp.StartDate) || t.Dates.Contains(temp.EndDate))
+                    record.Attendants.AddRange(
+                        city.Where(t => t.Dates.Contains(record.StartDate) || t.Dates.Contains(record.EndDate))
                         .Select(t => t.Email));
                     //if there are attendants that can come to BOTH days, they should count twice in the final count.
-                    temp.Score = temp.Attendants.Count + city.Where(t => t.Dates.Contains(temp.StartDate) && t.Dates.Contains(temp.EndDate)).Count();
+                    record.Score = record.Attendants.Count + city.Where(t => t.Dates.Contains(record.StartDate) && t.Dates.Contains(record.EndDate)).Count();
 
-                    cityResult.Add(temp);
+                    //At this point, I have summarized all the possible attendes for a specific city in a specific day
+                    cityResult.Add(record);
                 }
 
-                result.Add(cityResult.OrderByDescending(t => t.Attendants.Count).ThenByDescending(t=>t.Score).FirstOrDefault());
-            };
+                //At this point, I have summarized all the possible attendes for a specific city in every possible date.
+                //So I will choose the date range with the biggest amount of attendants/score
+                //NOTE: I am considering that only one event per city is allowed. If more than one event per city is required, the following line should be removed.
+                result.Add(cityResult.OrderByDescending(t => t.Attendants.Count).ThenByDescending(t => t.Score).FirstOrDefault());
+            });
 
-            Parallel.ForEach(grouped, _groupedFunction);
-
+            //At this point, I have choosen the best date for the event in every city. Now I need to select the top 5 cities.
             return result.OrderByDescending(t => t.Attendants.Count).ThenByDescending(t=>t.Score).Take(5).ToHashSet();
         }
     }

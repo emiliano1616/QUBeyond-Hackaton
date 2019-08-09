@@ -4,8 +4,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hackaton.Tests
 {
@@ -53,8 +51,7 @@ namespace Hackaton.Tests
         {
             var attendants = LoadDemoAttendants1();
 
-            var bus = new AttendeBusiness();
-            var result = bus.ProcessAttendants(attendants);
+            var result = new AttendeBusiness().ProcessAttendants(attendants);
 
             Assert.AreEqual("Raccoon City", result.FirstOrDefault().City);
             Assert.AreEqual(1, result.Count);
@@ -128,8 +125,7 @@ namespace Hackaton.Tests
         {
             var attendants = LoadDemoAttendants2();
 
-            var bus = new AttendeBusiness();
-            var result = bus.ProcessAttendants(attendants);
+            var result = new AttendeBusiness().ProcessAttendants(attendants);
 
             Assert.AreEqual(2, result.Count);
             Assert.AreEqual(0, DateTime.Compare(result.FirstOrDefault(t => t.City == "Raccoon City").StartDate, new DateTime(2019, 8, 15)));

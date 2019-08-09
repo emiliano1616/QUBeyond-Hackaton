@@ -19,11 +19,11 @@ namespace Hackaton
                 Environment.Exit(1);
             }
 
+            //Parse Json file
             var attendes = FilePersistance.LoadJson<Attende>(input);
-
-            var business = new AttendeBusiness();
-            var result = business.ProcessAttendants(attendes);
-
+            //Process the file
+            var result = new AttendeBusiness().ProcessAttendants(attendes);
+            //Write the result in the output file
             FilePersistance.WriteJsonToFile(result, output);
 
         }
