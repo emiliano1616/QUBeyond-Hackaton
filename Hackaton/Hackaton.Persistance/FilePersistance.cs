@@ -11,19 +11,6 @@ namespace Hackaton.Persistance
             return File.Exists(path);
         }
 
-        public static bool CanWrite(string path)
-        {
-            try
-            {
-                System.Security.AccessControl.DirectorySecurity ds = Directory.GetAccessControl(path);
-                return true;
-            }
-            catch (System.Exception ex)
-            {
-                return false;
-            }
-        }
-
         public static HashSet<T> LoadJson<T>(string path)
         {
             using (StreamReader r = new StreamReader(path))

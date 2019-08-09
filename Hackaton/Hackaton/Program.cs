@@ -18,11 +18,6 @@ namespace Hackaton
                 Console.WriteLine($"Cannot find file {input}");
                 Environment.Exit(1);
             }
-            if (!FilePersistance.CanWrite(output))
-            {
-                Console.WriteLine($"Cannot write on path {output}");
-                Environment.Exit(1);
-            }
 
             var attendes = FilePersistance.LoadJson<Attende>(input);
 
