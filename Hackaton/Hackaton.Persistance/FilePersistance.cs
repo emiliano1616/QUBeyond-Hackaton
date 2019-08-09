@@ -6,20 +6,37 @@ namespace Hackaton.Persistance
 {
     public class FilePersistance
     {
+        public static bool FileExists(string path)
+        {
+            return File.Exists(path);
+        }
 
-        public static List<T> LoadJson<T>(string path)
+        public static bool CanWrite(string path)
+        {
+            try
+            {
+                System.Security.AccessControl.DirectorySecurity ds = Directory.GetAccessControl(path);
+                return true;
+            }
+            catch (System.Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public static HashSet<T> LoadJson<T>(string path)
         {
             using (StreamReader r = new StreamReader(path))
             {
                 var serializer = new JsonSerializer();
                 using (var jsonTextReader = new JsonTextReader(r))
                 {
-                    return serializer.Deserialize<List<T>>(jsonTextReader); //34.344 ms
+                    return serializer.Deserialize<HashSet<T>>(jsonTextReader); //34.344 ms
                 }
             }
         }
 
-        public static void WriteJsonToFile<T>(List<T> obj, string path)
+        public static void WriteJsonToFile<T>(HashSet<T> obj, string path)
         {
             using (StreamWriter file = File.CreateText(path))
             {

@@ -14,3 +14,15 @@
 /Hackaton/.vs/Hackaton/v16
 /Hackaton/Hackaton.Business/bin/Debug
 /Hackaton/Hackaton.Persistance/bin/Debug
+/Hackaton/Hackaton.Tests/bin/Debug
+*.user
+/Hackaton/Hackaton/bin/Release
+/Hackaton/Hackaton/obj/Release
+/Hackaton/Hackaton.Business/bin/Release
+/Hackaton/Hackaton.Business/obj/Release
+/Hackaton/Hackaton.Domain/bin/Release
+/Hackaton/Hackaton.Domain/obj/Release
+/Hackaton/Hackaton.Persistance/bin/Release
+/Hackaton/Hackaton.Persistance/obj/Release
+/Hackaton/Hackaton.Tests/bin/Release
+/Hackaton/Hackaton.Tests/obj/Release

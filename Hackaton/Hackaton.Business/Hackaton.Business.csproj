@@ -49,10 +49,6 @@
       <Project>{DFA86B09-EFF8-43C9-BACB-98AAC89B2BB5}</Project>
       <Name>Hackaton.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Hackaton.Persistance\Hackaton.Persistance.csproj">
-      <Project>{46898788-9720-43A3-B93A-03C7138CFDE7}</Project>
-      <Name>Hackaton.Persistance</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
