@@ -14,3 +14,5 @@
 /Hackaton/.vs/Hackaton/v16
 /Hackaton/Hackaton.Business/bin/Debug
 /Hackaton/Hackaton.Persistance/bin/Debug
+/Hackaton/Hackaton.Tests/bin/Debug
+*.user

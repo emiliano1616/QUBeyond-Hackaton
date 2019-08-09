@@ -9,42 +9,28 @@ namespace Hackaton.Business
 {
     public class AttendeBusiness
     {
+        private readonly DateTime _startDate = new DateTime(2019, 7, 2);
+        private readonly DateTime _endDate = new DateTime(2019, 9, 9);
 
-        //private Action<IGrouping<string, Attende>> _groupedFunction = (city) =>
-        //{
-        //    var cityResult = new List<CityResult>();
-        //    var dates = city.SelectMany(t => t.Dates).Distinct().ToList();
-        //    foreach (var date in dates)
-        //    {
-        //        var temp = new CityResult()
-        //        {
-        //            City = city.Key,
-        //            StartDate = date,
-        //            EndDate = date.AddDays(1),
-        //            Attendants = new List<string>()
-        //        };
-        //        temp.Attendants.AddRange(
-        //            city.Where(t => t.Dates.Contains(temp.StartDate) || t.Dates.Contains(temp.EndDate))
-        //            .Select(t => t.Email));
-        //        cityResult.Add(temp);
-        //    }
 
-        //    result.Add(cityResult.OrderByDescending(t => t.Attendants.Count).FirstOrDefault());
-
-        //};
-
-        public List<CityResult> ProcessAttendants(List<Attende> attendes)
+        public HashSet<CityResult> ProcessAttendants(HashSet<Attende> attendes)
         {
-            var result = new List<CityResult>();
+            //the date provided by the attende is in the valid range. otherwise, ignore
+            Parallel.ForEach(attendes, (attende) => {
+                attende.Dates.RemoveAll(t => !(t.CompareTo(_startDate) >= 0 && t.CompareTo(_endDate) <= 0));
+            });
+            var result = new HashSet<CityResult>();
             var grouped = attendes.GroupBy(t => t.City);
 
 
             Action<IGrouping<string, Attende>> _groupedFunction = (city) =>
             {
-                var cityResult = new List<CityResult>();
-                var dates = city.SelectMany(t => t.Dates).Distinct().ToList();
+                var cityResult = new HashSet<CityResult>();
+
+                var dates = city.SelectMany(t => t.Dates).Distinct().ToHashSet();
                 foreach (var date in dates)
                 {
+                    //I need to assess every possible day.
                     var temp = new CityResult()
                     {
                         City = city.Key,
@@ -52,33 +38,23 @@ namespace Hackaton.Business
                         EndDate = date.AddDays(1),
                         Attendants = new List<string>()
                     };
+
+                    // the possible attendants for every consecutive day
                     temp.Attendants.AddRange(
                         city.Where(t => t.Dates.Contains(temp.StartDate) || t.Dates.Contains(temp.EndDate))
                         .Select(t => t.Email));
+                    //if there are attendants that can come to BOTH days, they should count twice in the final count.
+                    temp.Score = temp.Attendants.Count + city.Where(t => t.Dates.Contains(temp.StartDate) && t.Dates.Contains(temp.EndDate)).Count();
+
                     cityResult.Add(temp);
                 }
 
-                result.Add(cityResult.OrderByDescending(t => t.Attendants.Count).FirstOrDefault());
+                result.Add(cityResult.OrderByDescending(t => t.Attendants.Count).ThenByDescending(t=>t.Score).FirstOrDefault());
             };
 
+            Parallel.ForEach(grouped, _groupedFunction);
 
-
-            //If the list is small, it will perjudicate the performance. with 900 records, parallel reduces the process time to half
-            //(actually, that depends on the number of cores you CPU has)
-            if (attendes.Count > 500)
-            {
-                Parallel.ForEach(grouped, _groupedFunction);
-            } else
-            {
-                foreach(var city in grouped)
-                {
-                    _groupedFunction(city);
-                }
-            }
-
-
-
-            return result.OrderByDescending(t=>t.Attendants.Count).Take(5).ToList();
+            return result.OrderByDescending(t => t.Attendants.Count).ThenByDescending(t=>t.Score).Take(5).ToHashSet();
         }
     }
 }
