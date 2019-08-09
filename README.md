@@ -3,7 +3,7 @@ This solution has been built for the QUBeyond coding challenge.
 
 USAGE  
 Building  
-You could build the solution using Visual Studio or using the hackaton-build.bat included in root folder fo the solution. 
+You could build the solution using Visual Studio or using the hackaton-build.cmd included in root folder fo the solution. 
 That bat restores the nugget packages and built in release mode.
 
 Running  
